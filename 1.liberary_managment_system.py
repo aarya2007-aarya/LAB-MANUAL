@@ -2,70 +2,122 @@
 #principles in Python. This system should manage books and patrons (library
 #users), allowing for basic operations such as adding new books, registering
 #patrons, borrowing books, and returning books.
-
-class book:
-    def __init__(self,book_id,title,author):
-        self.book_id=book_id
-        self.title = title
-        self.author= author
+class Book:
+    def __init__(self, book_id, name, author):
+        self.book_id = book_id
+        self.name = name
+        self.author = author
         self.available = True
 
-class patron:
-    def __init__(self,name,patron_id):
-        self.name=name
-        self.patron_id=patron_id
 
-class Liberary:
+class Patron:
+    def __init__(self, patron_id, name):
+        self.patron_id = patron_id
+        self.name = name
+        self.borrowed_books = []
+
+
+class Library:
     def __init__(self):
-        self.book=[]
-        self.patron=[]
+        self.books = []
+        self.patrons = []
 
-    def add_book(self,book):
-        self.book.append(book)
-        print("added sucessfully")
+    def add_book(self):
+        book_id = input("Enter book ID: ")
+        name = input("Enter book name: ")
+        author = input("Enter author name: ")
 
-    def register(self,patron):
-        self.patron.append(patron)
-        print( "registered sucessfully")
+        book = Book(book_id, name, author)
+        self.books.append(book)
 
-    def borrow(self,patron_id,book_id):
-        for p in self.patron:
-            if p.patron_id==patron_id:
-                for b in self.book:
-                    if b.book_id==book_id:
+        print("Book added successfully!")
 
-                        if book.available == False:
-                            print("borrowed ")
+    def register_patron(self):
+        patron_id = input("Enter patron ID: ")
+        name = input("Enter patron name: ")
+
+        patron = Patron(patron_id, name)
+        self.patrons.append(patron)
+
+        print("Patron registered successfully!")
+
+    def borrow_book(self):
+        patron_id = input("Enter patron ID: ")
+        book_id = input("Enter book ID: ")
+
+        for patron in self.patrons:
+            if patron.patron_id == patron_id:
+
+                for book in self.books:
+                    if book.book_id == book_id:
+
+                        if book.available:
+                            book.available = False
+                            patron.borrowed_books.append(book)
+                            print("Book borrowed successfully!")
                         else:
-                            print("not borrowed")
+                            print("Book is already borrowed!")
 
-                            return("not available")
-                            
-    def ret(self,book_id):
-        for b in self.book:
-            if b.book_id==book_id:
-                book.available=True
-                print("book returned sucessfully")
-            else:
-                print("book not returned")
+                        return
 
-                return("not availale")
+                print("Book not found!")
+                return
+
+        print("Patron not found!")
+
+    def return_book(self):
+        patron_id = input("Enter patron ID: ")
+        book_id = input("Enter book ID: ")
+
+        for patron in self.patrons:
+            if patron.patron_id == patron_id:
+
+                for book in patron.borrowed_books:
+                    if book.book_id == book_id:
+                        book.available = True
+                        patron.borrowed_books.remove(book)
+
+                        print("Book returned successfully!")
+                        return
+
+                print("This book was not borrowed by this patron!")
+                return
+
+        print("Patron not found!")
 
 
-Liberary = Liberary ()  
-b1 = book(111,"python","alberteinstine") 
-b2 = book(112,"maths","aryabhatta")
+library = Library()
 
-Liberary.add_book(b1)
-Liberary.add_book(b2)
+while True:
+    print("\n--- LIBRARY MANAGEMENT SYSTEM ---")
+    print("1. Add Book")
+    print("2. Register Patron")
+    print("3. Borrow Book")
+    print("4. Return Book")
+    print("5. Exit")
 
-p1 = patron("Aarya","ABC")
+    choice = input("Enter your choice: ")
 
-Liberary.register(p1)
+    if choice == "1":
+        library.add_book()
 
-Liberary.borrow(111,"ABC")
-Liberary.ret("ABC")
+    elif choice == "2":
+        library.register_patron()
 
-        
-        
+    elif choice == "3":
+        library.borrow_book()
 
+    elif choice == "4":
+        library.return_book()
+
+    elif choice == "5":
+        print("Thank you!")
+        break
+
+    else:
+        print("Invalid choice!")
+
+
+   
+                       
+               
